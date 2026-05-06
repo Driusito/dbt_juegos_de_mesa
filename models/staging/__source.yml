@@ -1,0 +1,235 @@
+version: 2
+
+sources:
+  - name: bronze
+    description: ""
+    database: bgg_db
+    tables:
+      - name: categories
+        description: ""
+        columns:
+          - name: category_id
+            data_type: varchar
+            description: ""
+          - name: category_name
+            data_type: varchar
+            description: ""
+          - name: description
+            data_type: varchar
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""
+
+      - name: collections
+        description: ""
+        columns:
+          - name: collection_id
+            data_type: varchar
+            description: ""
+          - name: user_id
+            data_type: varchar
+            description: ""
+          - name: game_id
+            data_type: varchar
+            description: ""
+          - name: status
+            data_type: varchar
+            description: ""
+          - name: added_at
+            data_type: varchar
+            description: ""
+          - name: num_plays
+            data_type: number
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""
+
+      - name: designers
+        description: ""
+        columns:
+          - name: designer_id
+            data_type: varchar
+            description: ""
+          - name: name
+            data_type: varchar
+            description: ""
+          - name: nationality
+            data_type: varchar
+            description: ""
+          - name: birth_year
+            data_type: number
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""
+
+      - name: game_categories
+        description: ""
+        columns:
+          - name: game_id
+            data_type: varchar
+            description: ""
+          - name: category_id
+            data_type: varchar
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""
+
+      - name: game_mechanics
+        description: ""
+        columns:
+          - name: game_id
+            data_type: varchar
+            description: ""
+          - name: mechanic_id
+            data_type: varchar
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""
+
+      - name: games
+        description: ""
+        columns:
+          - name: game_id
+            data_type: varchar
+            description: ""
+          - name: title
+            data_type: varchar
+            description: ""
+          - name: year_published
+            data_type: number
+            description: ""
+          - name: language_dependence
+            data_type: varchar
+            description: ""
+          - name: min_players
+            data_type: number
+            description: ""
+          - name: max_players
+            data_type: number
+            description: ""
+          - name: min_playtime
+            data_type: number
+            description: ""
+          - name: max_playtime
+            data_type: number
+            description: ""
+          - name: min_age
+            data_type: number
+            description: ""
+          - name: complexity_weight
+            data_type: number
+            description: ""
+          - name: publisher_id
+            data_type: varchar
+            description: ""
+          - name: designer_id
+            data_type: varchar
+            description: ""
+          - name: mechanics
+            data_type: varchar
+            description: ""
+          - name: categories
+            data_type: varchar
+            description: ""
+          - name: bgg_rank
+            data_type: number
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""
+
+      - name: mechanics
+        description: ""
+        columns:
+          - name: mechanic_id
+            data_type: varchar
+            description: ""
+          - name: mechanic_name
+            data_type: varchar
+            description: ""
+          - name: description
+            data_type: varchar
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""
+
+      - name: publishers
+        description: ""
+        columns:
+          - name: publisher_id
+            data_type: varchar
+            description: ""
+          - name: name
+            data_type: varchar
+            description: ""
+          - name: country
+            data_type: varchar
+            description: ""
+          - name: founded_year
+            data_type: number
+            description: ""
+          - name: is_active
+            data_type: boolean
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""
+
+      - name: reviews
+        description: ""
+        columns:
+          - name: review_id
+            data_type: varchar
+            description: ""
+          - name: user_id
+            data_type: varchar
+            description: ""
+          - name: game_id
+            data_type: varchar
+            description: ""
+          - name: rating
+            data_type: number
+            description: ""
+          - name: review_text
+            data_type: varchar
+            description: ""
+          - name: review_date
+            data_type: date
+            description: ""
+          - name: helpful_votes
+            data_type: number
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""
+
+      - name: users
+        description: ""
+        columns:
+          - name: user_id
+            data_type: varchar
+            description: ""
+          - name: username
+            data_type: varchar
+            description: ""
+          - name: email
+            data_type: varchar
+            description: ""
+          - name: country
+            data_type: varchar
+            description: ""
+          - name: registration_date
+            data_type: varchar
+            description: ""
+          - name: user_type
+            data_type: varchar
+            description: ""
+          - name: _loaded_at
+            data_type: timestamp_ntz
+            description: ""

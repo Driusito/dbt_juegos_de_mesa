@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: categories
+    description: "Tabla de staging de categorias."
+    columns:
+      - name: CATEGORY_ID
+        description: "Clave primaria de la direccion"
+        tests:
+          - unique        # Verifica que no haya IDs duplicados
+          - not_null      # Verifica que no haya nulos
+      - name: CATEGORY_NAME
+        description: "Nombre de la categoria"
+      - name: DESCRIPTION 
+        description: "Descripcion de la categoria"
+      - name: LOADED_AT
+        description: "Timestamp de carga en bronze"
+  - name: COLLECTIONS
+    description: "Colecciones de los juegos por usuario"
+    columns:
+      - name: COLLECTION_ID
+        description: "Id unico de coleccion"
+        tests:
+          - unique
+          - not_null
+      - name: USER_ID
+        description: "Identificador clave foránea de user"
+        tests:
+          - not_null
+      - name: status
+        description: "3 tipos: owned | whishlist | trading"
+        
+        
+          
+
+          
