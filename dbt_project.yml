@@ -25,6 +25,17 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "dbt_packages"
 
 
+
+seeds:
+  +schema: bronze
+  +database: bgg_db  
+  my_new_project:
+    country_codes:
+      # Tipos de columna explícitos para evitar inferencias erróneas
+      +column_types:
+        country_code: VARCHAR(2)
+        country_name: VARCHAR(100)
+        continent:    VARCHAR(50)
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 

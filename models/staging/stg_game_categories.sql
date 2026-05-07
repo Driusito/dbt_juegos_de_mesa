@@ -1,5 +1,6 @@
 with
 
+/*{{ dbt_utils.generate_surrogate_key(['field_a', 'field_b']) }} as unique_key,*/
 source as (
 
     select game_id, categories
