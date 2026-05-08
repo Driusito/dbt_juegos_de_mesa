@@ -10,8 +10,8 @@ renamed as (
 
     select
         mechanic_id,
-        initcap(mechanic_name) as mechanic_name,
-        coalesce(description,'No description') as description,
+        mechanic_name,
+        description,
         _loaded_at
 
     from source
