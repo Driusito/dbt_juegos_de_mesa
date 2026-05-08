@@ -10,8 +10,8 @@ renamed as (
 
     select distinct
         md5(category_id) as category_id,
-        initcap(category_name) as name,
-        coalesce(description,'No description') as Description,
+        category_name,
+        description,
         _loaded_at
 
     from source

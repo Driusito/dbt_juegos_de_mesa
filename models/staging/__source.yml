@@ -129,13 +129,7 @@ sources:
             description: ""
           - name: designer_id
             data_type: varchar
-            description: ""
-          - name: mechanics
-            data_type: varchar
-            description: ""
-          - name: categories
-            data_type: varchar
-            description: ""
+            description: ""          
           - name: bgg_rank
             data_type: number
             description: ""
