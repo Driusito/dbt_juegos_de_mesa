@@ -11,8 +11,7 @@ renamed as (
     select
         mechanic_id,
         mechanic_name,
-        description,
-        _loaded_at
+        description
 
     from source
 

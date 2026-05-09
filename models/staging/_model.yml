@@ -1,36 +1,257 @@
 version: 2
 
 models:
-  - name: categories
-    description: "Tabla de staging de categorias."
+  - name: stg_categories
+    description: "Staging de categorias. Renombrado y limpieza basica desde raw_categories."
     columns:
       - name: CATEGORY_ID
-        description: "Clave primaria de la direccion"
+        description: "Clave primaria de la categoria. Formato CAT-XXX."
         tests:
-          - unique        # Verifica que no haya IDs duplicados
-          - not_null      # Verifica que no haya nulos
-      - name: CATEGORY_NAME
-        description: "Nombre de la categoria"
-      - name: DESCRIPTION 
-        description: "Descripcion de la categoria"
-      - name: LOADED_AT
-        description: "Timestamp de carga en bronze"
-  - name: COLLECTIONS
-    description: "Colecciones de los juegos por usuario"
+          - unique
+          - not_null
+      - name: NAME
+        description: "Nombre de la categoria."
+        tests:
+          - not_null
+      - name: DESCRIPTION
+        description: "Descripcion de la categoria. Nulos reemplazados por 'No description'."
+
+  - name: stg_mechanics
+    description: "Staging de mecanicas de juego. Renombrado y limpieza basica desde raw_mechanics."
     columns:
-      - name: COLLECTION_ID
-        description: "Id unico de coleccion"
+      - name: MECHANIC_ID
+        description: "Clave primaria de la mecanica. Formato MEC-XXX."
+        tests:
+          - unique
+          - not_null
+      - name: MECHANIC_NAME
+        description: "Nombre de la mecanica."
+        tests:
+          - not_null
+      - name: DESCRIPTION
+        description: "Descripcion de la mecanica."
+
+  - name: stg_publishers
+    description: "Staging de editoriales. Renombrado y limpieza basica desde raw_publishers."
+    columns:
+      - name: PUBLISHER_ID
+        description: "Clave primaria de la editorial. Formato PUB-XXX."
+        tests:
+          - unique
+          - not_null
+      - name: NAME
+        description: "Nombre de la editorial."
+        tests:
+          - not_null
+      - name: COUNTRY
+        description: "Codigo de pais ISO 3166-1 alpha-2."
+      - name: FOUNDED_YEAR
+        description: "Anio de fundacion de la editorial."
+      - name: IS_ACTIVE
+        description: "Indica si la editorial sigue activa."
+
+  - name: stg_designers
+    description: "Staging de disenadores. Renombrado, limpieza y traduccion de nacionalidad desde raw_designers."
+    columns:
+      - name: DESIGNER_ID
+        description: "Clave primaria del disenador. Formato DES-XXX."
+        tests:
+          - unique
+          - not_null
+      - name: NAME
+        description: "Nombre del disenador."
+        tests:
+          - not_null
+      - name: COUNTRY_NAME
+        description: "Nombre completo del pais del disenador traducido desde el codigo ISO."
+      - name: BIRTH_YEAR_CLEAN
+        description: "Anio de nacimiento como texto. Nulos reemplazados por texto por defecto."
+
+  - name: stg_games
+    description: "Staging de juegos. Renombrado, limpieza de tipos y normalizacion basica desde raw_games."
+    columns:
+      - name: GAME_ID
+        description: "Clave primaria del juego. Formato GAME-XXXX."
+        tests:
+          - unique
+          - not_null
+      - name: TITLE
+        description: "Titulo del juego."
+        tests:
+          - not_null
+      - name: YEAR_PUBLISHED
+        description: "Anio de publicacion del juego."
+      - name: LANGUAGE_DEPENDENCE
+        description: "Nivel de dependencia del idioma. Valores: NONE, LOW, ENG."
+        tests:
+          - accepted_values:
+              arguments: ['NONE', 'LOW', 'ENG']
+      - name: MIN_PLAYERS
+        description: "Numero minimo de jugadores."
+        tests:
+          - not_null
+      - name: MAX_PLAYERS
+        description: "Numero maximo de jugadores."
+        tests:
+          - not_null
+      - name: MIN_PLAYTIME
+        description: "Duracion minima de la partida en minutos."
+      - name: MAX_PLAYTIME
+        description: "Duracion maxima de la partida en minutos."
+      - name: MIN_AGE
+        description: "Edad minima recomendada."
+      - name: COMPLEXITY_WEIGHT
+        description: "Peso de complejidad en escala 1.0-5.0."
+      - name: PUBLISHER_ID
+        description: "Clave foranea hacia stg_publishers."
+        tests:
+          - not_null
+          - relationships:
+              arguments: ref('stg_publishers')
+              column_name: PUBLISHER_ID
+      - name: DESIGNER_ID
+        description: "Clave foranea hacia stg_designers."
+        tests:
+          - not_null
+          - relationships:
+              arguments: ref('stg_designers')
+              column_name: DESIGNER_ID
+      - name: BGG_RANK
+        description: "Ranking del juego en BoardGameGeek."
+
+  - name: stg_game_categories
+    description: "Staging de relacion N:M entre juegos y categorias desde raw_game_categories."
+    columns:
+      - name: GAME_ID
+        description: "Clave foranea hacia stg_games."
+        tests:
+          - not_null
+          - relationships:
+              arguments: ref('stg_games')
+              column_name: GAME_ID
+      - name: CATEGORY_ID
+        description: "Clave foranea hacia stg_categories."
+        tests:
+          - not_null
+          - relationships:
+              arguments: ref('stg_categories')
+              column_name: CATEGORY_ID
+
+  - name: stg_game_mechanics
+    description: "Staging de relacion N:M entre juegos y mecanicas desde raw_game_mechanics."
+    columns:
+      - name: GAME_ID
+        description: "Clave foranea hacia stg_games."
+        tests:
+          - not_null
+          - relationships:
+              arguments: ref('stg_games')
+              column_name: GAME_ID
+      - name: MECHANIC_ID
+        description: "Clave foranea hacia stg_mechanics."
+        tests:
+          - not_null
+          - relationships:
+              arguments: ref('stg_mechanics')
+              column_name: MECHANIC_ID
+
+  - name: stg_users
+    description: "Staging de usuarios. Renombrado y limpieza basica desde raw_users."
+    columns:
+      - name: USER_ID
+        description: "Clave primaria del usuario. Formato USR-XXXX."
+        tests:
+          - unique
+          - not_null
+      - name: USERNAME
+        description: "Nombre de usuario."
+        tests:
+          - not_null
+      - name: EMAIL
+        description: "Direccion de email del usuario."
+      - name: COUNTRY
+        description: "Codigo de pais ISO 3166-1 alpha-2."
+      - name: REGISTRATION_DATE
+        description: "Fecha de registro del usuario."
+        tests:
+          - not_null
+      - name: USER_TYPE
+        description: "Tipo de usuario. Valores: casual, enthusiast, collector."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments: ['casual', 'enthusiast', 'collector']
+
+  - name: stg_reviews_incremental
+    description: "Staging de resenias. Incremental por _loaded_at desde raw_reviews."
+    columns:
+      - name: REVIEW_ID
+        description: "Clave primaria de la resenia. Formato REV-XXXXX."
         tests:
           - unique
           - not_null
       - name: USER_ID
-        description: "Identificador clave foránea de user"
+        description: "Clave foranea hacia stg_users."
         tests:
           - not_null
-      - name: status
-        description: "3 tipos: owned | whishlist | trading"
-        
-        
-          
+          - relationships:
+              arguments: ref('stg_users')
+              column_name: USER_ID
+      - name: GAME_ID
+        description: "Clave foranea hacia stg_games."
+        tests:
+          - not_null
+          - relationships:
+              arguments: ref('stg_games')
+              column_name: GAME_ID
+      - name: RATING
+        description: "Valoracion numerica del juego en escala 1.0-10.0."
+        tests:
+          - not_null
+      - name: REVIEW_TEXT
+        description: "Texto de la resenia."
+      - name: REVIEW_DATE
+        description: "Fecha de publicacion de la resenia."
+        tests:
+          - not_null
+      - name: HELPFUL_VOTES
+        description: "Numero de votos de utilidad."
+      - name: _LOADED_AT
+        description: "Timestamp de carga en Bronze. Usado como watermark para la carga incremental."
 
-          
+  - name: stg_collections
+    description: "Staging de colecciones. Renombrado, limpieza de status y fechas desde raw_collections."
+    columns:
+      - name: COLLECTION_ID
+        description: "Clave primaria de la entrada de coleccion. Formato COL-XXXXX."
+        tests:
+          - unique
+          - not_null
+      - name: USER_ID
+        description: "Clave foranea hacia stg_users."
+        tests:
+          - not_null
+          - relationships:
+              arguments: ref('stg_users')
+              column_name: USER_ID
+      - name: GAME_ID
+        description: "Clave foranea hacia stg_games."
+        tests:
+          - not_null
+          - relationships:
+              arguments: ref('stg_games')
+              column_name: GAME_ID
+      - name: STATUS
+        description: "Estado del juego en la coleccion. Valores: Owned, Played, Wishlist, Trading."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments: ['Owned', 'Played', 'Wishlist', 'Trading']
+      - name: ADDED_AT
+        description: "Fecha en que el usuario aniadio el juego a su coleccion."
+        tests:
+          - not_null
+      - name: NUM_PLAYS
+        description: "Numero de partidas jugadas. Nulos reemplazados por 0."
+        tests:
+          - not_null

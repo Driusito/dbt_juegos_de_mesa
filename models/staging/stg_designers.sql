@@ -12,8 +12,7 @@ renamed as (
         designer_id,
         name,
         nationality,
-        birth_year,
-        _loaded_at
+        birth_year
 
     from source
 

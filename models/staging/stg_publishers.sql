@@ -13,8 +13,7 @@ renamed as (
         name,
         country,
         founded_year,
-        is_active,
-        _loaded_at
+        is_active
 
     from source
 

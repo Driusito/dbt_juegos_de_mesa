@@ -14,8 +14,7 @@ renamed as (
         email,
         country,
         registration_date,
-        user_type,
-        _loaded_at
+        user_type
 
     from source
 

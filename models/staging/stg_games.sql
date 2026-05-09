@@ -21,8 +21,7 @@ renamed as (
         complexity_weight,
         publisher_id,
         designer_id,
-        bgg_rank,        
-        _loaded_at
+        bgg_rank
 
     from source
 

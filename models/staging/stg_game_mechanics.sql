@@ -10,8 +10,7 @@ renamed as (
 
     select
         game_id,
-        mechanic_id,
-        _loaded_at
+        mechanic_id
 
     from source
 

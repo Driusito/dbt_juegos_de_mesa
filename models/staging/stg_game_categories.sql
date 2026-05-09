@@ -10,8 +10,7 @@ renamed as (
 
     select
         game_id,
-        category_id,
-        _loaded_at
+        category_id
 
     from source
 

@@ -14,8 +14,7 @@ renamed as (
         game_id,
         status,
         added_at,
-        num_plays,
-        _loaded_at
+        num_plays
 
     from source
 

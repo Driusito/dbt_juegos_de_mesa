@@ -8,11 +8,10 @@ source as (
 
 renamed as (
 
-    select distinct
-        md5(category_id) as category_id,
-        category_name,
-        description,
-        _loaded_at
+    select 
+        category_id,
+        name,
+        description
 
     from source
 
