@@ -46,3 +46,7 @@ models:
 seeds:
   my_new_project:
     +schema: SEEDS
+
+snapshots:
+  my_new_project:
+    +schema: SNAPSHOTS
