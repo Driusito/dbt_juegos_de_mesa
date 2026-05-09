@@ -10,7 +10,7 @@ renamed as (
 
     select 
         category_id,
-        name,
+        category_name,
         description
 
     from source

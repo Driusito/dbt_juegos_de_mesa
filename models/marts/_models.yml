@@ -6,31 +6,32 @@ models:
     columns:
       - name: DATE_SK
         description: "Clave subrogada de la fecha en formato numerico YYYYMMDD."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: DATE
         description: "Fecha en tipo DATE."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: YEAR
         description: "Anio de la fecha."
-        tests:
+        data_tests:
           - not_null
       - name: QUARTER
         description: "Trimestre de la fecha en formato Q1, Q2, Q3, Q4."
-        tests:
+        data_tests:
           - not_null
           - accepted_values:
-              arguments: ['Q1', 'Q2', 'Q3', 'Q4']
+              arguments:
+                values: ['Q1', 'Q2', 'Q3', 'Q4']
       - name: MONTH_NUMBER
         description: "Numero del mes (1-12)."
-        tests:
+        data_tests:
           - not_null
       - name: MONTH_NAME
         description: "Nombre del mes en ingles."
-        tests:
+        data_tests:
           - not_null
       - name: WEEK_OF_YEAR
         description: "Numero de semana dentro del anio (1-53)."
@@ -38,33 +39,34 @@ models:
         description: "Nombre del dia de la semana en ingles."
       - name: IS_WEEKEND
         description: "TRUE si la fecha corresponde a sabado o domingo."
-        tests:
+        data_tests:
           - not_null
 
   - name: dim_game
-    description: "Dimension de juegos. Enriquecida con publisher, designer y logica de negocio como complexity_bucket y avg_playtime."
+    description: "Dimension de juegos. Enriquecida con publisher, designer, paises y logica de negocio como complexity_bucket y avg_playtime."
     columns:
       - name: GAME_SK
         description: "Clave subrogada del juego generada con md5 sobre game_id."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: GAME_ID
         description: "Clave natural del juego. Formato GAME-XXXX."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: TITLE
         description: "Titulo del juego."
-        tests:
+        data_tests:
           - not_null
       - name: YEAR_PUBLISHED
         description: "Anio de publicacion del juego."
       - name: LANGUAGE_DEPENDENCE
         description: "Nivel de dependencia del idioma: NONE, LOW, ENG."
-        tests:
+        data_tests:
           - accepted_values:
-              arguments: ['NONE', 'LOW', 'ENG']
+              arguments:
+                values: ['NONE', 'LOW', 'ENG']
       - name: MIN_PLAYERS
         description: "Numero minimo de jugadores."
       - name: MAX_PLAYERS
@@ -81,60 +83,74 @@ models:
         description: "Ranking del juego en BoardGameGeek."
       - name: AVG_PLAYTIME
         description: "Duracion media de la partida en minutos. Calculada como (min_playtime + max_playtime) / 2."
-        tests:
+        data_tests:
           - not_null
       - name: COMPLEXITY_BUCKET
         description: "Segmento de complejidad: Light, Medium-Light, Medium-Heavy, Heavy."
-        tests:
+        data_tests:
           - not_null
           - accepted_values:
-              arguments: ['Light', 'Medium-Light', 'Medium-Heavy', 'Heavy']
+              arguments:
+                values: ['Light', 'Medium-Light', 'Medium-Heavy', 'Heavy']
       - name: PUBLISHER_NAME
         description: "Nombre de la editorial desnormalizado desde stg_publishers."
-      - name: PUBLISHER_COUNTRY
-        description: "Pais de la editorial desnormalizado desde stg_publishers."
+      - name: PUBLISHER_COUNTRY_CODE
+        description: "Codigo de pais ISO de la editorial."
+      - name: PUBLISHER_COUNTRY_NAME
+        description: "Nombre completo del pais de la editorial enriquecido desde el seed country_codes."
+      - name: PUBLISHER_CONTINENT
+        description: "Continente de la editorial enriquecido desde el seed country_codes."
       - name: DESIGNER_NAME
         description: "Nombre del disenador desnormalizado desde stg_designers."
-      - name: DESIGNER_NATIONALITY
-        description: "Nacionalidad del disenador desnormalizado desde stg_designers."
+      - name: DESIGNER_NATIONALITY_CODE
+        description: "Codigo de nacionalidad ISO del disenador."
+      - name: DESIGNER_COUNTRY_NAME
+        description: "Nombre completo del pais del disenador enriquecido desde el seed country_codes."
+      - name: DESIGNER_CONTINENT
+        description: "Continente del disenador enriquecido desde el seed country_codes."
 
   - name: dim_user
-    description: "Dimension de usuarios con SCD Type 2. Mantiene historial de cambios en user_type."
+    description: "Dimension de usuarios con SCD Type 2. Mantiene historial de cambios en user_type. Enriquecida con nombre de pais y continente desde el seed country_codes."
     columns:
       - name: USER_SK
         description: "Clave subrogada del usuario. Distinta por cada version del registro."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: USER_ID
         description: "Clave natural del usuario. Formato USR-XXXX. Puede aparecer en multiples filas."
-        tests:
+        data_tests:
           - not_null
       - name: USERNAME
         description: "Nombre de usuario en la plataforma."
-        tests:
+        data_tests:
           - not_null
       - name: EMAIL
         description: "Direccion de email del usuario."
-      - name: COUNTRY
-        description: "Codigo de pais del usuario."
+      - name: COUNTRY_CODE
+        description: "Codigo de pais ISO del usuario."
+      - name: COUNTRY_NAME
+        description: "Nombre completo del pais del usuario enriquecido desde el seed country_codes."
+      - name: CONTINENT
+        description: "Continente del usuario enriquecido desde el seed country_codes."
       - name: USER_TYPE
         description: "Tipo de usuario en el periodo de vigencia: casual, enthusiast, collector."
-        tests:
+        data_tests:
           - not_null
           - accepted_values:
-              arguments: ['casual', 'enthusiast', 'collector']
+              arguments:
+                values: ['casual', 'enthusiast', 'collector']
       - name: VALID_FROM
         description: "Fecha de inicio de vigencia de esta version del registro."
-        tests:
+        data_tests:
           - not_null
       - name: VALID_TO
         description: "Fecha de fin de vigencia. 9999-12-31 indica registro actualmente vigente."
-        tests:
+        data_tests:
           - not_null
       - name: IS_CURRENT
         description: "TRUE si esta es la version actualmente vigente del usuario."
-        tests:
+        data_tests:
           - not_null
 
   - name: fct_reviews
@@ -142,45 +158,48 @@ models:
     columns:
       - name: REVIEW_SK
         description: "Clave subrogada de la resenia generada con md5 sobre review_id."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: USER_SK
         description: "Clave subrogada hacia dim_user."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              arguments: ref('dim_user')
-              column_name: USER_SK
+              arguments:
+                to: ref('dim_user')
+                field: USER_SK
       - name: GAME_SK
         description: "Clave subrogada hacia dim_game."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              arguments: ref('dim_game')
-              column_name: GAME_SK
+              arguments:
+                to: ref('dim_game')
+                field: GAME_SK
       - name: DATE_SK
         description: "Clave subrogada hacia dim_date en formato YYYYMMDD."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              arguments: ref('dim_date')
-              column_name: DATE_SK
+              arguments:
+                to: ref('dim_date')
+                field: DATE_SK
       - name: RATING
         description: "Metrica. Valoracion numerica del juego en escala 1.0-10.0."
-        tests:
+        data_tests:
           - not_null
       - name: HELPFUL_VOTES
         description: "Metrica. Numero de votos de utilidad recibidos por la resenia."
-        tests:
+        data_tests:
           - not_null
       - name: REVIEW_LENGTH_CHARS
         description: "Metrica. Longitud en caracteres del texto de la resenia."
-        tests:
+        data_tests:
           - not_null
       - name: REVIEW_DATE
         description: "Fecha de publicacion de la resenia."
-        tests:
+        data_tests:
           - not_null
       - name: _LOADED_AT
         description: "Timestamp de carga en Bronze. Usado como watermark para la incremental."
@@ -190,41 +209,45 @@ models:
     columns:
       - name: COLLECTION_SK
         description: "Clave subrogada de la entrada de coleccion generada con md5 sobre collection_id."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: USER_SK
         description: "Clave subrogada hacia dim_user."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              arguments: ref('dim_user')
-              column_name: USER_SK
+              arguments:
+                to: ref('dim_user')
+                field: USER_SK
       - name: GAME_SK
         description: "Clave subrogada hacia dim_game."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              arguments: ref('dim_game')
-              column_name: GAME_SK
+              arguments:
+                to: ref('dim_game')
+                field: GAME_SK
       - name: DATE_SK
         description: "Clave subrogada hacia dim_date en formato YYYYMMDD."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              arguments: ref('dim_date')
-              column_name: DATE_SK
+              arguments:
+                to: ref('dim_date')
+                field: DATE_SK
       - name: STATUS
         description: "Estado del juego en la coleccion: Owned, Played, Wishlist, Trading."
-        tests:
+        data_tests:
           - not_null
           - accepted_values:
-              arguments: ['Owned', 'Played', 'Wishlist', 'Trading']
+              arguments:
+                values: ['Owned', 'Played', 'Wishlist', 'Trading']
       - name: NUM_PLAYS
         description: "Metrica. Numero de partidas jugadas por el usuario."
-        tests:
+        data_tests:
           - not_null
       - name: ADDED_AT
         description: "Fecha en que el usuario aniadio el juego a su coleccion."
-        tests:
+        data_tests:
           - not_null

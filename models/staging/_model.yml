@@ -6,12 +6,12 @@ models:
     columns:
       - name: CATEGORY_ID
         description: "Clave primaria de la categoria. Formato CAT-XXX."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: category_name
         description: "Nombre de la categoria."
-        tests:
+        data_tests:
           - not_null
       - name: DESCRIPTION
         description: "Descripcion de la categoria. Nulos reemplazados por 'No description'."
@@ -21,12 +21,12 @@ models:
     columns:
       - name: MECHANIC_ID
         description: "Clave primaria de la mecanica. Formato MEC-XXX."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: MECHANIC_NAME
         description: "Nombre de la mecanica."
-        tests:
+        data_tests:
           - not_null
       - name: DESCRIPTION
         description: "Descripcion de la mecanica."
@@ -36,12 +36,12 @@ models:
     columns:
       - name: PUBLISHER_ID
         description: "Clave primaria de la editorial. Formato PUB-XXX."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: NAME
         description: "Nombre de la editorial."
-        tests:
+        data_tests:
           - not_null
       - name: COUNTRY
         description: "Codigo de pais ISO 3166-1 alpha-2."
@@ -55,12 +55,12 @@ models:
     columns:
       - name: DESIGNER_ID
         description: "Clave primaria del disenador. Formato DES-XXX."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: NAME
         description: "Nombre del disenador."
-        tests:
+        data_tests:
           - not_null
       - name: COUNTRY_NAME
         description: "Nombre completo del pais del disenador traducido desde el codigo ISO."
@@ -72,27 +72,28 @@ models:
     columns:
       - name: GAME_ID
         description: "Clave primaria del juego. Formato GAME-XXXX."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: TITLE
         description: "Titulo del juego."
-        tests:
+        data_tests:
           - not_null
       - name: YEAR_PUBLISHED
         description: "Anio de publicacion del juego."
       - name: LANGUAGE_DEPENDENCE
         description: "Nivel de dependencia del idioma. Valores: NONE, LOW, ENG."
-        tests:
+        data_tests:
           - accepted_values:
-              values: ['NONE', 'LOW', 'ENG']
+              arguments:
+                values: ['NONE', 'LOW', 'ENG']
       - name: MIN_PLAYERS
         description: "Numero minimo de jugadores."
-        tests:
+        data_tests:
           - not_null
       - name: MAX_PLAYERS
         description: "Numero maximo de jugadores."
-        tests:
+        data_tests:
           - not_null
       - name: MIN_PLAYTIME
         description: "Duracion minima de la partida en minutos."
@@ -104,18 +105,20 @@ models:
         description: "Peso de complejidad en escala 1.0-5.0."
       - name: PUBLISHER_ID
         description: "Clave foranea hacia stg_publishers."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_publishers')
-              column_name: PUBLISHER_ID
+              arguments:
+                to: ref('stg_publishers')
+                field: PUBLISHER_ID
       - name: DESIGNER_ID
         description: "Clave foranea hacia stg_designers."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_designers')
-              column_name: DESIGNER_ID
+              arguments:
+                to: ref('stg_designers')
+                field: DESIGNER_ID
       - name: BGG_RANK
         description: "Ranking del juego en BoardGameGeek."
 
@@ -124,48 +127,52 @@ models:
     columns:
       - name: GAME_ID
         description: "Clave foranea hacia stg_games."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_games')
-              column_name: GAME_ID
+              arguments:
+                to: ref('stg_games')
+                field: GAME_ID
       - name: CATEGORY_ID
         description: "Clave foranea hacia stg_categories."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_categories')
-              column_name: CATEGORY_ID
+              arguments:
+                to: ref('stg_categories')
+                field: CATEGORY_ID
 
   - name: stg_game_mechanics
     description: "Staging de relacion N:M entre juegos y mecanicas desde raw_game_mechanics."
     columns:
       - name: GAME_ID
         description: "Clave foranea hacia stg_games."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_games')
-              column_name: GAME_ID
+              arguments:
+                to: ref('stg_games')
+                field: GAME_ID
       - name: MECHANIC_ID
         description: "Clave foranea hacia stg_mechanics."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_mechanics')
-              column_name: MECHANIC_ID
+              arguments:
+                to: ref('stg_mechanics')
+                field: MECHANIC_ID
 
   - name: stg_users
     description: "Staging de usuarios. Renombrado y limpieza basica desde raw_users."
     columns:
       - name: USER_ID
         description: "Clave primaria del usuario. Formato USR-XXXX."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: USERNAME
         description: "Nombre de usuario."
-        tests:
+        data_tests:
           - not_null
       - name: EMAIL
         description: "Direccion de email del usuario."
@@ -173,46 +180,49 @@ models:
         description: "Codigo de pais ISO 3166-1 alpha-2."
       - name: REGISTRATION_DATE
         description: "Fecha de registro del usuario."
-        tests:
+        data_tests:
           - not_null
       - name: USER_TYPE
         description: "Tipo de usuario. Valores: casual, enthusiast, collector."
-        tests:
+        data_tests:
           - not_null
           - accepted_values:
-              values: ['casual', 'enthusiast', 'collector']
+              arguments:
+                values: ['casual', 'enthusiast', 'collector']
 
   - name: stg_reviews_incremental
     description: "Staging de resenias. Incremental por _loaded_at desde raw_reviews."
     columns:
       - name: REVIEW_ID
         description: "Clave primaria de la resenia. Formato REV-XXXXX."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: USER_ID
         description: "Clave foranea hacia stg_users."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_users')
-              column_name: USER_ID
+              arguments:
+                to: ref('stg_users')
+                field: USER_ID
       - name: GAME_ID
         description: "Clave foranea hacia stg_games."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_games')
-              column_name: GAME_ID
+              arguments:
+                to: ref('stg_games')
+                field: GAME_ID
       - name: RATING
         description: "Valoracion numerica del juego en escala 1.0-10.0."
-        tests:
+        data_tests:
           - not_null
       - name: REVIEW_TEXT
         description: "Texto de la resenia."
       - name: REVIEW_DATE
         description: "Fecha de publicacion de la resenia."
-        tests:
+        data_tests:
           - not_null
       - name: HELPFUL_VOTES
         description: "Numero de votos de utilidad."
@@ -224,34 +234,37 @@ models:
     columns:
       - name: COLLECTION_ID
         description: "Clave primaria de la entrada de coleccion. Formato COL-XXXXX."
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: USER_ID
         description: "Clave foranea hacia stg_users."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_users')
-              column_name: USER_ID
+              arguments:
+                to: ref('stg_users')
+                field: USER_ID
       - name: GAME_ID
         description: "Clave foranea hacia stg_games."
-        tests:
+        data_tests:
           - not_null
           - relationships:
-              model: ref('stg_games')
-              column_name: GAME_ID
+              arguments:
+                to: ref('stg_games')
+                field: GAME_ID
       - name: STATUS
         description: "Estado del juego en la coleccion. Valores: Owned, Played, Wishlist, Trading."
-        tests:
+        data_tests:
           - not_null
           - accepted_values:
-              values: ['Owned', 'Played', 'Wishlist', 'Trading']
+              arguments:
+                values: ['Owned', 'Played', 'Wishlist', 'Trading']
       - name: ADDED_AT
         description: "Fecha en que el usuario aniadio el juego a su coleccion."
-        tests:
+        data_tests:
           - not_null
       - name: NUM_PLAYS
         description: "Numero de partidas jugadas. Nulos reemplazados por 0."
-        tests:
+        data_tests:
           - not_null

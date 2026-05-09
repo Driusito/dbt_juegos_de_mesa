@@ -43,3 +43,6 @@ models:
     marts:
       +schema: GOLD
       +materialized: table
+seeds:
+  my_new_project:
+    +schema: SEEDS

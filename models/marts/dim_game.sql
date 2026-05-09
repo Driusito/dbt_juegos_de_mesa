@@ -16,6 +16,12 @@ stg_designers as (
 
 ),
 
+country_codes as (
+
+    select * from {{ ref('country_codes') }}
+
+),
+
 final as (
 
     select
@@ -23,12 +29,12 @@ final as (
         g.game_id,
         g.title,
         g.year_published,
-        g.language_dependence,
-        g.min_players,
+        initcap(g.language_dependence)                   as language_dependence,
+        coalesce(g.min_players, 0)                       as min_players,
         g.max_players,
-        g.min_playtime,
+        coalesce(g.min_playtime, 0)                      as min_playtime,
         g.max_playtime,
-        g.min_age,
+        coalesce(g.min_age, 3)                           as min_age,
         g.complexity_weight,
         g.bgg_rank,
 
@@ -42,13 +48,20 @@ final as (
         end                                              as complexity_bucket,
 
         p.name                                           as publisher_name,
-        p.country                                        as publisher_country,
-        d.name                                           as designer_name,
-        d.nationality                                    as designer_nationality
+        p.country                                        as publisher_country_code,
+        cp.country_name                                  as publisher_country_name,
+        cp.continent                                     as publisher_continent,
 
-    from stg_games        g
-    left join stg_publishers p on g.publisher_id = p.publisher_id
-    left join stg_designers  d on g.designer_id  = d.designer_id
+        d.name                                           as designer_name,
+        d.nationality                                    as designer_nationality_code,
+        cd.country_name                                  as designer_country_name,
+        cd.continent                                     as designer_continent
+
+    from stg_games            g
+    left join stg_publishers  p  on g.publisher_id = p.publisher_id
+    left join stg_designers   d  on g.designer_id  = d.designer_id
+    left join country_codes   cp on p.country      = cp.country_code
+    left join country_codes   cd on d.nationality  = cd.country_code
 
 )
 
