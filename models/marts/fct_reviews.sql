@@ -6,7 +6,7 @@
 
 with stg_reviews as (
 
-    select * from {{ ref('stg_reviews') }}
+    select * from {{ ref('stg_reviews_incremental') }}
 
 ),
 

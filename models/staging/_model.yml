@@ -9,7 +9,7 @@ models:
         tests:
           - unique
           - not_null
-      - name: NAME
+      - name: category_name
         description: "Nombre de la categoria."
         tests:
           - not_null
@@ -85,7 +85,7 @@ models:
         description: "Nivel de dependencia del idioma. Valores: NONE, LOW, ENG."
         tests:
           - accepted_values:
-              arguments: ['NONE', 'LOW', 'ENG']
+              values: ['NONE', 'LOW', 'ENG']
       - name: MIN_PLAYERS
         description: "Numero minimo de jugadores."
         tests:
@@ -107,14 +107,14 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_publishers')
+              model: ref('stg_publishers')
               column_name: PUBLISHER_ID
       - name: DESIGNER_ID
         description: "Clave foranea hacia stg_designers."
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_designers')
+              model: ref('stg_designers')
               column_name: DESIGNER_ID
       - name: BGG_RANK
         description: "Ranking del juego en BoardGameGeek."
@@ -127,14 +127,14 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_games')
+              model: ref('stg_games')
               column_name: GAME_ID
       - name: CATEGORY_ID
         description: "Clave foranea hacia stg_categories."
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_categories')
+              model: ref('stg_categories')
               column_name: CATEGORY_ID
 
   - name: stg_game_mechanics
@@ -145,14 +145,14 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_games')
+              model: ref('stg_games')
               column_name: GAME_ID
       - name: MECHANIC_ID
         description: "Clave foranea hacia stg_mechanics."
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_mechanics')
+              model: ref('stg_mechanics')
               column_name: MECHANIC_ID
 
   - name: stg_users
@@ -180,7 +180,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              arguments: ['casual', 'enthusiast', 'collector']
+              values: ['casual', 'enthusiast', 'collector']
 
   - name: stg_reviews_incremental
     description: "Staging de resenias. Incremental por _loaded_at desde raw_reviews."
@@ -195,14 +195,14 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_users')
+              model: ref('stg_users')
               column_name: USER_ID
       - name: GAME_ID
         description: "Clave foranea hacia stg_games."
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_games')
+              model: ref('stg_games')
               column_name: GAME_ID
       - name: RATING
         description: "Valoracion numerica del juego en escala 1.0-10.0."
@@ -232,21 +232,21 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_users')
+              model: ref('stg_users')
               column_name: USER_ID
       - name: GAME_ID
         description: "Clave foranea hacia stg_games."
         tests:
           - not_null
           - relationships:
-              arguments: ref('stg_games')
+              model: ref('stg_games')
               column_name: GAME_ID
       - name: STATUS
         description: "Estado del juego en la coleccion. Valores: Owned, Played, Wishlist, Trading."
         tests:
           - not_null
           - accepted_values:
-              arguments: ['Owned', 'Played', 'Wishlist', 'Trading']
+              values: ['Owned', 'Played', 'Wishlist', 'Trading']
       - name: ADDED_AT
         description: "Fecha en que el usuario aniadio el juego a su coleccion."
         tests:
