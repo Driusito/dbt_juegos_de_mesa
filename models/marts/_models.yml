@@ -82,7 +82,7 @@ models:
       - name: BGG_RANK
         description: "Ranking del juego en BoardGameGeek."
       - name: AVG_PLAYTIME
-        description: "Duracion media de la partida en minutos. Calculada como (min_playtime + max_playtime) / 2."
+        description: "Duracion media de la partida en minutos. Calculada como (min_playtime + max_playtime) / 2. Si la duracion minima es nula, la media es la duraccion maxima"
         data_tests:
           - not_null
       - name: COMPLEXITY_BUCKET

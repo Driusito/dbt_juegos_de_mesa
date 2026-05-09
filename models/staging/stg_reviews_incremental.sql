@@ -1,6 +1,6 @@
 {{ config(
-    materialized  = 'incremental',
-    unique_key    = 'review_id',
+    materialized     = 'incremental',
+    unique_key       = 'review_id',
     on_schema_change = 'sync_all_columns'
 ) }}
 
@@ -16,15 +16,15 @@ renamed_casted as (
         review_id,
         user_id,
         game_id,
-        rating,
-        review_text,
+        coalesce(rating,0.0) as rating,
+        coalesce(review_text,"No text") as review_text,
         review_date,
-        helpful_votes,
+        coalesce(helpful_votes,0)as helpful_votes,
         _loaded_at
-
     from source
-
     where review_id is not null
+      and user_id   is not null
+      and game_id   is not null
 
     {% if is_incremental() %}
         and _loaded_at > (select max(_loaded_at) from {{ this }})

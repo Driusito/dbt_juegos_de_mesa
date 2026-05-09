@@ -1,4 +1,4 @@
-with 
+with
 
 source as (
 
@@ -11,11 +11,15 @@ renamed as (
     select
         publisher_id,
         name,
-        country,
-        founded_year,
+        upper(country) as country,
+        coalesce(founded_year,9999),
         is_active
-
     from source
+    where publisher_id is not null
+    qualify row_number() over (
+        partition by publisher_id
+        order by _loaded_at
+    ) = 1
 
 )
 

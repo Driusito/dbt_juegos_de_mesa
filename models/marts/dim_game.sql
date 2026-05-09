@@ -38,7 +38,7 @@ final as (
         coalesce(g.complexity_weight,1)                  as complexity_weight,                
         g.bgg_rank,
 
-        round((g.min_playtime + g.max_playtime) / 2, 0) as avg_playtime,
+        coalesce(round((g.min_playtime + g.max_playtime) / 2, 0),g.max_playtime) as avg_playtime,
 
         case
             when g.complexity_weight < 2.0 then 'Light'
