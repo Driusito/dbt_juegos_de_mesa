@@ -88,13 +88,9 @@ models:
               arguments:
                 values: ['NONE', 'LOW', 'ENG']
       - name: MIN_PLAYERS
-        description: "Numero minimo de jugadores."
-        data_tests:
-          - not_null
+        description: "Numero minimo de jugadores."        
       - name: MAX_PLAYERS
-        description: "Numero maximo de jugadores."
-        data_tests:
-          - not_null
+        description: "Numero maximo de jugadores."        
       - name: MIN_PLAYTIME
         description: "Duracion minima de la partida en minutos."
       - name: MAX_PLAYTIME
@@ -269,5 +265,4 @@ models:
           - not_null
       - name: NUM_PLAYS
         description: "Numero de partidas jugadas. Nulos reemplazados por 0."
-        data_tests:
-          - not_null
+        

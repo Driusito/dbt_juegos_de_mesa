@@ -10,11 +10,20 @@ renamed as (
 
     select
         designer_id,
-        initcap(name) as name,
-        initcap(nationality) as nationality,
-        coalesce(birth_year,9999) as birth_year
+        initcap(trim(name))         as name,
+        upper(trim(nationality))    as nationality,
+        birth_year,
+        _loaded_at
     from source
-    where designer_id is not null
+    where {{ is_valid_id('designer_id', '^DES-[0-9]{3}$') }}
+
+),
+
+filtered as (
+
+    select *
+    from renamed
+    where name is not null
     qualify row_number() over (
         partition by designer_id
         order by _loaded_at
@@ -22,4 +31,4 @@ renamed as (
 
 )
 
-select * from renamed
+select * from filtered

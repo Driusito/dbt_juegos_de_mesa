@@ -10,26 +10,34 @@ with source as (
 
 ),
 
-renamed_casted as (
+renamed as (
 
     select
         review_id,
         user_id,
         game_id,
-        coalesce(rating,0.0) as rating,
-        coalesce(review_text,'No text') as review_text,
+        rating,
+        review_text,
         review_date,
-        coalesce(helpful_votes,0)as helpful_votes,
+        helpful_votes,
         _loaded_at
     from source
-    where review_id is not null
-      and user_id   is not null
-      and game_id   is not null
+    where {{ is_valid_id('review_id', '^REV-[0-9]{5}$') }}
+      and {{ is_valid_id('user_id',   '^USR-[0-9]{4}$') }}
+      and {{ is_valid_id('game_id',   '^GAME-[0-9]{4}$') }}
 
     {% if is_incremental() %}
         and _loaded_at > (select max(_loaded_at) from {{ this }})
     {% endif %}
 
+),
+
+filtered as (
+
+    select *
+    from renamed
+    where review_date is not null
+
 )
 
-select * from renamed_casted
+select * from filtered
