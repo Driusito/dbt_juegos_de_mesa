@@ -10,19 +10,24 @@ renamed as (
 
     select
         user_id,
-        username,
+        lower(trim(username))                       as username,
         case
             when email like '%@%.%'
             and length(trim(email)) > 6
             and email not like '%[at]%'
             then lower(trim(email))
-        end                          as email,
-        upper(country)               as country,
+        end                                         as email,
+        upper(trim(country))                        as country,
         registration_date,
-        initcap(user_type)           as user_type,
+        case upper(trim(user_type))
+            when 'CASUAL'       then 'casual'
+            when 'ENTHUSIAST'   then 'enthusiast'
+            when 'COLLECTOR'    then 'collector'
+            else null
+        end                                         as user_type,
         _loaded_at
     from source
-    where user_id is not null
+    where {{ is_valid_id('user_id', '^USR-[0-9]{4}$') }}
 
 ),
 
@@ -30,7 +35,8 @@ filtered as (
 
     select *
     from renamed
-    where email is not null          
+    where email     is not null
+      and user_type is not null
     qualify row_number() over (
         partition by user_id
         order by _loaded_at desc

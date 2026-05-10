@@ -10,10 +10,19 @@ renamed as (
 
     select
         mechanic_id,
-        initcap(mechanic_name) as mechanic_name,
-        coalesce(description, 'No description') as description
+        initcap(trim(mechanic_name))                    as mechanic_name,
+        description,
+        _loaded_at
     from source
-    where mechanic_id is not null
+    where {{ is_valid_id('mechanic_id', '^MEC-[0-9]{3}$') }}
+
+),
+
+filtered as (
+
+    select *
+    from renamed
+    where mechanic_name is not null
     qualify row_number() over (
         partition by mechanic_id
         order by _loaded_at
@@ -21,4 +30,4 @@ renamed as (
 
 )
 
-select * from renamed
+select * from filtered

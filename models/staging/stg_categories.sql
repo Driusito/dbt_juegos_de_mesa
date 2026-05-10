@@ -10,10 +10,19 @@ renamed as (
 
     select
         category_id,
-        initcap(category_name)as category_name,
-        coalesce(description,'No description') as description
+        initcap(trim(category_name))                    as category_name,
+        description,
+        _loaded_at
     from source
-    where category_id is not null
+    where {{ is_valid_id('category_id', '^CAT-[0-9]{3}$') }}
+
+),
+
+filtered as (
+
+    select *
+    from renamed
+    where category_name is not null
     qualify row_number() over (
         partition by category_id
         order by _loaded_at
@@ -21,4 +30,4 @@ renamed as (
 
 )
 
-select * from renamed
+select * from filtered
