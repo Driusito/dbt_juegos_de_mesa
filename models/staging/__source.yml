@@ -3,7 +3,9 @@ version: 2
 sources:
   - name: bronze
     description: ""
-    database: bgg_db
+    schema: bronze
+    database: BGG_DB_{{ env_var('DBT_ENVIRONMENT', 'FAIL') }}
+
     tables:
       - name: categories
         description: ""

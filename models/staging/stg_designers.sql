@@ -1,4 +1,4 @@
-with 
+with
 
 source as (
 
@@ -10,12 +10,15 @@ renamed as (
 
     select
         designer_id,
-        name,
-        nationality,
-        birth_year,
-        _loaded_at
-
+        initcap(name) as name,
+        initcap(nationality) as nationality,
+        coalesce(birth_year,9999) as birth_year
     from source
+    where designer_id is not null
+    qualify row_number() over (
+        partition by designer_id
+        order by _loaded_at
+    ) = 1
 
 )
 

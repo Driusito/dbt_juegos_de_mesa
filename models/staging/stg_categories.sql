@@ -1,4 +1,4 @@
-with 
+with
 
 source as (
 
@@ -8,13 +8,16 @@ source as (
 
 renamed as (
 
-    select distinct
-        md5(category_id) as category_id,
-        category_name,
-        description,
-        _loaded_at
-
+    select
+        category_id,
+        initcap(category_name)as category_name,
+        coalesce(description,'No description') as description
     from source
+    where category_id is not null
+    qualify row_number() over (
+        partition by category_id
+        order by _loaded_at
+    ) = 1
 
 )
 

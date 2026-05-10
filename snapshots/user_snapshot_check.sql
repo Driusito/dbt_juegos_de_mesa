@@ -1,5 +1,4 @@
-{% snapshot budget_snapshot_check %}
-
+{% snapshot user_snapshot_check %}   
     {{
         config(
           target_schema='snapshots',

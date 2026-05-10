@@ -1,4 +1,4 @@
-with 
+with
 
 source as (
 
@@ -10,10 +10,14 @@ renamed as (
 
     select
         game_id,
-        mechanic_id,
-        _loaded_at
-
+        mechanic_id
     from source
+    where game_id is not null
+      and mechanic_id is not null
+    qualify row_number() over (
+        partition by game_id, mechanic_id
+        order by _loaded_at
+    ) = 1
 
 )
 
