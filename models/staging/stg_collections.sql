@@ -13,7 +13,11 @@ renamed as (
         user_id,
         game_id,
         initcap(status) as status,
-        added_at,
+        CASE
+            WHEN LENGTH(SPLIT_PART(added_at, '-', 1)) = 4
+              THEN TRY_TO_DATE(added_at, 'YYYY-MM-DD') 
+                ELSE  TRY_TO_DATE(added_at, 'DD-MM-YYYY')
+                  END AS added_at ,
         coalesce(num_plays,0) as num_plays
     from source
     where collection_id is not null

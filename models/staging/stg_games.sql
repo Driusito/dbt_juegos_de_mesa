@@ -12,7 +12,7 @@ renamed as (
         game_id,
         initcap(title) as title,
         year_published,
-        initcap(language_dependence) as language_dependence,
+        upper(language_dependence) as language_dependence,
         coalesce(min_players,1) as min_players,
         max_players,
         coalesce(min_playtime,1) as min_playtime,

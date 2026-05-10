@@ -54,8 +54,7 @@ final as (
 
         d.name                                           as designer_name,
         d.nationality                                    as designer_nationality_code,
-        cd.country_name                                  as designer_country_name,
-        cd.continent                                     as designer_continent
+      
 
     from stg_games            g
     left join stg_publishers  p  on g.publisher_id = p.publisher_id

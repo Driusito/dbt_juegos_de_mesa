@@ -17,7 +17,7 @@ renamed_casted as (
         user_id,
         game_id,
         coalesce(rating,0.0) as rating,
-        coalesce(review_text,"No text") as review_text,
+        coalesce(review_text,'No text') as review_text,
         review_date,
         coalesce(helpful_votes,0)as helpful_votes,
         _loaded_at

@@ -127,6 +127,9 @@ models:
           - not_null
       - name: EMAIL
         description: "Direccion de email del usuario."
+        data_tests:
+          - not_null
+          
       - name: COUNTRY_CODE
         description: "Codigo de pais ISO del usuario."
       - name: COUNTRY_NAME

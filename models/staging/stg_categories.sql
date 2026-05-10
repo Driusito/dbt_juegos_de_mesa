@@ -10,8 +10,8 @@ renamed as (
 
     select
         category_id,
-        initcap(category_name),
-        coalesce(description,"No description") as description
+        initcap(category_name)as category_name,
+        coalesce(description,'No description') as description
     from source
     where category_id is not null
     qualify row_number() over (
