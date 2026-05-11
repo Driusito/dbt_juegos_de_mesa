@@ -35,8 +35,7 @@ filtered as (
 
     select *
     from renamed
-    where email     is not null
-      and user_type is not null
+    where user_type is not null
     qualify row_number() over (
         partition by user_id
         order by _loaded_at desc
