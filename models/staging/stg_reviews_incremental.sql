@@ -16,10 +16,10 @@ renamed as (
         review_id,
         user_id,
         game_id,
-        rating,
-        review_text,
+        coalesce(rating, 0.0)                   as rating,
+        coalesce(trim(review_text), 'No text')  as review_text,
         review_date,
-        helpful_votes,
+        coalesce(helpful_votes, 0)              as helpful_votes,
         _loaded_at
     from source
     where {{ is_valid_id('review_id', '^REV-[0-9]{5}$') }}
@@ -29,6 +29,11 @@ renamed as (
     {% if is_incremental() %}
         and _loaded_at > (select max(_loaded_at) from {{ this }})
     {% endif %}
+
+    qualify row_number() over (
+        partition by review_id
+        order by _loaded_at desc
+    ) = 1
 
 ),
 
