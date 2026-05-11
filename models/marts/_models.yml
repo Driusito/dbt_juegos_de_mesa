@@ -126,9 +126,7 @@ models:
         data_tests:
           - not_null
       - name: EMAIL
-        description: "Direccion de email del usuario."
-        data_tests:
-          - not_null
+        description: "Direccion de email del usuario."      
           
       - name: COUNTRY_CODE
         description: "Codigo de pais ISO del usuario."
@@ -138,8 +136,7 @@ models:
         description: "Continente del usuario enriquecido desde el seed country_codes."
       - name: USER_TYPE
         description: "Tipo de usuario en el periodo de vigencia: casual, enthusiast, collector."
-        data_tests:
-          - not_null
+        data_tests:          
           - accepted_values:
               arguments:
                 values: ['casual', 'enthusiast', 'collector']

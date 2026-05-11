@@ -6,7 +6,7 @@ select
     s.country                                        as country_code,
     c.country_name,
     c.continent,
-    s.user_type,
+    lower(trim(s.user_type)) as user_type,
     s.dbt_valid_from                                 as valid_from,
     coalesce(s.dbt_valid_to, '9999-12-31'::date)     as valid_to,
     s.dbt_valid_to is null                           as is_current
