@@ -36,8 +36,15 @@ final as (
         u.user_sk,
         g.game_sk,
         d.date_sk,
-        r.rating,
-        r.helpful_votes,
+        case 
+        when r.rating > 10.0
+            then 10
+        when r.rating < 0
+            then 0
+        else 
+            r.rating
+        end as rating,
+        coalesce(r.helpful_votes, 0)                 as helpful_votes,
         len(r.review_text)                           as review_length_chars,
         r.review_date,
         r._loaded_at
@@ -47,8 +54,12 @@ final as (
     left join dim_user    u on r.user_id     = u.user_id
     left join dim_date    d on r.review_date = d.date
 
+    where g.game_sk is not null
+      and u.user_sk is not null
+      and d.date_sk is not null
+
     {% if is_incremental() %}
-        where r._loaded_at > (select max(_loaded_at) from {{ this }})
+        and r._loaded_at > (select max(_loaded_at) from {{ this }})
     {% endif %}
 
 )
