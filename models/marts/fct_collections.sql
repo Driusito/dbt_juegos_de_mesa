@@ -34,11 +34,10 @@ final as (
         c.added_at
 
     from stg_collections  c
-    left join dim_game    g on c.game_id   = g.game_id
-    left join dim_user    u on c.user_id   = u.user_id
-                           and c.added_at >= u.valid_from
-                           and c.added_at <  u.valid_to
-    left join dim_date    d on c.added_at  = d.date
+    left join dim_game    g on c.game_id    = g.game_id
+    left join dim_user    u on c.user_id    = u.user_id
+                           and u.is_current = true
+    left join dim_date    d on c.added_at   = d.date
 
     where g.game_sk is not null
       and u.user_sk is not null

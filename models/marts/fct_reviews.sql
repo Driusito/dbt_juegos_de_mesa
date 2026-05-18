@@ -46,11 +46,10 @@ final as (
         r._loaded_at
 
     from stg_reviews      r
-    left join dim_game    g on r.game_id      = g.game_id
-    left join dim_user    u on r.user_id      = u.user_id
-                           and r.review_date >= u.valid_from
-                           and r.review_date <  u.valid_to
-    left join dim_date    d on r.review_date  = d.date
+    left join dim_game    g on r.game_id     = g.game_id
+    left join dim_user    u on r.user_id     = u.user_id
+                           and u.is_current  = true
+    left join dim_date    d on r.review_date = d.date
 
     where g.game_sk is not null
       and u.user_sk is not null
