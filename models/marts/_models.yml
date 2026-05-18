@@ -110,143 +110,76 @@ models:
         description: "Continente del disenador enriquecido desde el seed country_codes."
 
   - name: dim_user
-    description: "Dimension de usuarios con SCD Type 2. Mantiene historial de cambios en user_type. Enriquecida con nombre de pais y continente desde el seed country_codes."
+    description: "Dimension de usuarios tipo 1: una fila por usuario (version actual)."
     columns:
       - name: USER_SK
-        description: "Clave subrogada del usuario. Distinta por cada version del registro."
+        description: "Clave subrogada del usuario generada con md5(user_id)."
         data_tests:
           - unique
           - not_null
+
       - name: USER_ID
-        description: "Clave natural del usuario. Formato USR-XXXX. Puede aparecer en multiples filas."
+        description: "Clave natural del usuario."
         data_tests:
           - not_null
+
       - name: USERNAME
-        description: "Nombre de usuario en la plataforma."
+        description: "Nombre de usuario."
         data_tests:
           - not_null
+
       - name: EMAIL
-        description: "Direccion de email del usuario."
+        description: "Email del usuario."
+
       - name: COUNTRY_CODE
-        description: "Codigo de pais ISO del usuario."
+        description: "Codigo de pais ISO."
+
       - name: COUNTRY_NAME
-        description: "Nombre completo del pais del usuario enriquecido desde el seed country_codes."
+        description: "Nombre del pais."
+
       - name: CONTINENT
-        description: "Continente del usuario enriquecido desde el seed country_codes."
+        description: "Continente."
+
       - name: USER_TYPE
-        description: "Tipo de usuario en el periodo de vigencia: casual, enthusiast, collector."
-        data_tests:          
+        description: "Tipo de usuario."
+        data_tests:
           - accepted_values:
               arguments:
                 values: ['casual', 'enthusiast', 'collector']
+
       - name: VALID_FROM
-        description: "Fecha de inicio de vigencia de esta version del registro."
+        description: "Fecha desde la que esta version es vigente."
         data_tests:
           - not_null
-      - name: VALID_TO
-        description: "Fecha de fin de vigencia. 9999-12-31 indica registro actualmente vigente."
-        data_tests:
-          - not_null
+
       - name: IS_CURRENT
-        description: "TRUE si esta es la version actualmente vigente del usuario."
+        description: "Siempre TRUE en este modelo."
         data_tests:
           - not_null
+
 
   - name: fct_reviews
-    description: "Tabla de hechos de resenias. Grain: una fila por resenia. Materializada como incremental."
     columns:
-      - name: REVIEW_SK
-        description: "Clave subrogada de la resenia generada con md5 sobre review_id."
-        data_tests:
-          - unique
-          - not_null
       - name: USER_SK
-        description: "Clave subrogada hacia dim_user."
         data_tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_user')
                 field: USER_SK
-      - name: GAME_SK
-        description: "Clave subrogada hacia dim_game."
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_game')
-                field: GAME_SK
-      - name: DATE_SK
-        description: "Clave subrogada hacia dim_date en formato YYYYMMDD."
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_date')
-                field: DATE_SK
-      - name: RATING
-        description: "Metrica. Valoracion numerica del juego en escala 1.0-10.0."
-        data_tests:
-          - not_null
-      - name: HELPFUL_VOTES
-        description: "Metrica. Numero de votos de utilidad recibidos por la resenia."
-        data_tests:
-          - not_null
-      - name: REVIEW_LENGTH_CHARS
-        description: "Metrica. Longitud en caracteres del texto de la resenia."
-        data_tests:
-          - not_null
-      - name: REVIEW_DATE
-        description: "Fecha de publicacion de la resenia."
-        data_tests:
-          - not_null
-      - name: _LOADED_AT
-        description: "Timestamp de carga en Bronze. Usado como watermark para la incremental."
+
+      - name: USER_ID
+        description: "Clave natural del usuario."
 
   - name: fct_collections
-    description: "Tabla de hechos de colecciones. Grain: una fila por entrada de coleccion de usuario."
     columns:
-      - name: COLLECTION_SK
-        description: "Clave subrogada de la entrada de coleccion generada con md5 sobre collection_id."
-        data_tests:
-          - unique
-          - not_null
       - name: USER_SK
-        description: "Clave subrogada hacia dim_user."
         data_tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_user')
                 field: USER_SK
-      - name: GAME_SK
-        description: "Clave subrogada hacia dim_game."
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_game')
-                field: GAME_SK
-      - name: DATE_SK
-        description: "Clave subrogada hacia dim_date en formato YYYYMMDD."
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_date')
-                field: DATE_SK
-      - name: STATUS
-        description: "Estado del juego en la coleccion: Owned, Played, Wishlist, Trading."
-        data_tests:
-          - not_null
-          - accepted_values:
-              arguments:
-                values: ['Owned', 'Played', 'Wishlist', 'Trading']
-      - name: NUM_PLAYS
-        description: "Metrica. Numero de partidas jugadas por el usuario."
-        data_tests:
-          - not_null
-      - name: ADDED_AT
-        description: "Fecha en que el usuario aniadio el juego a su coleccion."
-        data_tests:
-          - not_null
+
+      - name: USER_ID
+        description: "Clave natural del usuario."
