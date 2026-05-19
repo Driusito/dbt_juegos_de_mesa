@@ -1,8 +1,3 @@
-{{ config(
-    materialized     = 'incremental',
-    unique_key       = 'review_sk',
-    on_schema_change = 'sync_all_columns'
-) }}
 
 with stg_reviews as (
     select
@@ -43,9 +38,7 @@ final as (
     where g.game_sk is not null
       and d.date_sk is not null
 
-    {% if is_incremental() %}
-        and r._loaded_at > (select max(_loaded_at) from {{ this }})
-    {% endif %}
+   
 )
 
 select * from final

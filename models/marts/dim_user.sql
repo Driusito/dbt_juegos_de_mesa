@@ -1,6 +1,5 @@
 with base as (
 
-    -- TODOS los usuarios válidos que existen en stg_users
     select distinct
         regexp_replace(lower(trim(user_id)), '[^a-z0-9-]', '') as user_id,
         username,
