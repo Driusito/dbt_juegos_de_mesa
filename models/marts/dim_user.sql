@@ -62,7 +62,6 @@ enriched as (
 
 missing_users as (
 
-    -- Usuarios que aparecen en FCT pero NO existen en base
     select distinct user_id
     from (
         select regexp_replace(lower(trim(user_id)), '[^a-z0-9-]', '') as user_id
