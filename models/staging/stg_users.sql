@@ -6,7 +6,7 @@ source as (
 
 renamed as (
     select
-        regexp_replace(upper(trim(user_id)), '[^a-z0-9-]', '') as user_id,
+        regexp_replace(lower(trim(user_id)), '[^a-z0-9-]', '') as user_id,
         lower(trim(username)) as username,
         case
             when email like '%@%.%'

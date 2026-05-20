@@ -1,7 +1,7 @@
 with base as (
 
     select distinct
-        regexp_replace(upper(trim(user_id)), '[^a-z0-9-]', '') as user_id,
+        regexp_replace(lower(trim(user_id)), '[^a-z0-9-]', '') as user_id,
         username,
         email,
         country,
@@ -14,7 +14,7 @@ with base as (
 snapshot as (
 
     select
-        regexp_replace(upper(trim(user_id)), '[^a-z0-9-]', '') as user_id,
+        regexp_replace(lower(trim(user_id)), '[^a-z0-9-]', '') as user_id,
         username,
         email,
         country,
