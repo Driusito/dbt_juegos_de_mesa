@@ -6,14 +6,14 @@ source as (
 
 renamed as (
     select
-        regexp_replace(lower(trim(user_id)), '[^a-z0-9-]', '') as user_id,
+        regexp_replace(upper(trim(user_id)), '[^a-z0-9-]', '') as user_id,
         lower(trim(username)) as username,
         case
             when email like '%@%.%'
             and length(trim(email)) > 6
             and email not like '%[at]%'
             then lower(trim(email))
-            else null
+            else 'Invitado'
         end as email,
         upper(trim(country)) as country,
         registration_date,
